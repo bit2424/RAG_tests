@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  qdrant:
+    image: qdrant/qdrant:latest
+    ports:
+      - "6333:6333"
+      - "6334:6334"
+    volumes:
+      - qdrant_storage:/qdrant/storage
+    networks:
+      - rag_network
+
+  milvus:
+    image: milvusdb/milvus:latest
+    ports:
+      - "19530:19530"
+      - "9091:9091"
+    environment:
+      ETCD_CFG.auto-compaction-retention: "1"
+    volumes:
+      - milvus_data:/var/lib/milvus
+    networks:
+      - rag_network
+
+  app:
+    build: .
+    volumes:
+      - .:/app
+    depends_on:
+      - qdrant
+      - milvus
+    environment:
+      - QDRANT_HOST=qdrant
+      - QDRANT_PORT=6333
+      - MILVUS_HOST=milvus
+      - MILVUS_PORT=19530
+    networks:
+      - rag_network
+
+networks:
+  rag_network:
+    driver: bridge
+
+volumes:
+  qdrant_storage:
+  milvus_data: 

@@ -1,0 +1,7 @@
+chromadb
+sentence-transformers
+pinecone-client
+pymilvus
+pyyaml
+pytest
+qdrant-client 

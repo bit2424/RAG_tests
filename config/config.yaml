@@ -1,0 +1,19 @@
+databases:
+  qdrant:
+    host: ${QDRANT_HOST:-localhost}
+    port: ${QDRANT_PORT:-6333}
+    collection_name: test_collection
+    vector_size: 384
+
+  milvus:
+    host: ${MILVUS_HOST:-localhost}
+    port: ${MILVUS_PORT:-19530}
+    collection_name: test_collection
+    vector_size: 384
+
+  chroma:
+    persist_directory: data/chroma
+    collection_name: test_collection
+
+embedding:
+  model_name: all-MiniLM-L6-v2 
