@@ -1,7 +1,10 @@
 chromadb
 sentence-transformers
-pinecone-client
-pymilvus
+# pinecone-client
+# pymilvus
 pyyaml
 pytest
-qdrant-client 
+qdrant-client
+datasets
+tqdm
+huggingface-hub 

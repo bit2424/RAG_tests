@@ -1,6 +1,6 @@
 from typing import List, Dict, Any
-from ..databases.base import VectorDatabase
-from ..embeddings.embedding_models import EmbeddingModel
+from src.databases.base import VectorDatabase
+from src.embeddings.embedding_models import EmbeddingModel
 
 class RAGRetriever:
     def __init__(self, vector_db: VectorDatabase, embedding_model: EmbeddingModel):

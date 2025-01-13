@@ -16,4 +16,20 @@ databases:
     collection_name: test_collection
 
 embedding:
-  model_name: all-MiniLM-L6-v2 
+  model_name: all-MiniLM-L6-v2
+
+dataset:
+  # Either specify datasets explicitly
+  # datasets: 
+  #   - "squad"
+  #   - "wiki_qa"
+  #   - "natural_questions"
+  # Or use search criteria
+  # search:
+  #   query: "question answering"
+  #   task: "question-answering"
+  #   language: "en"
+  #   size_category: "100K<n<1M"
+  #   limit: 100
+  min_length: 50
+  max_length: 2000 

@@ -1,7 +1,7 @@
 from qdrant_client import QdrantClient
 from qdrant_client.http import models
 from typing import List, Dict, Any
-from .base import VectorDatabase
+from src.databases.base import VectorDatabase
 
 class QdrantAdapter(VectorDatabase):
     def __init__(self, collection_name: str, vector_size: int = 384, host: str = "localhost", port: int = 6333):
