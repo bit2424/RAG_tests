@@ -1,8 +1,8 @@
-from src.databases.qdrant_db import QdrantAdapter
-from src.embeddings.embedding_models import EmbeddingModel
-from src.retrievers.retriever import RAGRetriever
-from src.utils.config import load_config
-from src.utils.sql_schema_loader import SQLSchemaLoader
+from databases.qdrant_db import QdrantAdapter
+from embeddings.embedding_models import EmbeddingModel
+from retrievers.retriever import RAGRetriever
+from utils.config import load_config
+from utils.sql_schema_loader import SQLSchemaLoader
 from typing import List, Dict, Any
 import time
 from contextlib import contextmanager
@@ -86,38 +86,33 @@ def main():
     
     # Example JSON query
     sample_json = {
-        "user": {
-            "id": 1,
-            "name": "John Doe",
-            "email": "john@example.com",
-            "orders": [
-                {
-                    "order_id": "ORD123",
-                    "items": [
-                        {
-                            "product_id": "P1",
-                            "quantity": 2,
-                            "price": 29.99
-                        }
-                    ],
-                    "total": 59.98,
-                    "status": "pending"
-                }
-            ]
+        "book": {
+            "title": "The Great Gatsby",
+            "isbn": "9780743273565",
+            "author": {
+                "first_name": "F. Scott",
+                "last_name": "Fitzgerald"
+            },
+            "inventory": {
+                "condition": "new",
+                "quantity": 50,
+                "retail_price": 15.99
+            },
+            "categories": ["Fiction", "Classics"]
         }
     }
     
     with timer("Performing schema matching"):
         query = analyze_json_query(sample_json, schema_loader)
-        results = retriever.retrieve(query, top_k=3)
+        results = retriever.retrieve(query, top_k=5)
         
         print(f"\nAnalyzing JSON structure:\n{json.dumps(sample_json, indent=2)}")
         print(f"\nGenerated Query:\n{query}")
         print("\nRecommended tables:")
         for i, result in enumerate(results, 1):
             print(f"\n{i}. Table: {result['metadata']['table_name']}")
-            print(f"   Schema:\n{json.dumps(result['metadata']['schema'], indent=2)}")
-            print(f"   Match Score: {1 - result['distance']:.2f}")
+            # print(f"   Schema:\n{json.dumps(result['metadata']['schema'], indent=2)}")
+            # print(f"   Match Score: {1 - result['distance']:.2f}")
 
 if __name__ == "__main__":
     with timer("Total execution"):

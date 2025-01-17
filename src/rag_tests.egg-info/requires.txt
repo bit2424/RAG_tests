@@ -1,0 +1,10 @@
+chromadb
+sentence-transformers
+pyyaml
+pytest
+qdrant-client
+datasets
+tqdm
+huggingface-hub
+sqlalchemy
+psycopg2-binary

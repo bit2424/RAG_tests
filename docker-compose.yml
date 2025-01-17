@@ -1,4 +1,19 @@
 services:
+  postgres:
+    image: postgres:15
+    container_name: bookstore_db
+    environment:
+      POSTGRES_DB: bookstore
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin123
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init-scripts:/docker-entrypoint-initdb.d
+    networks:
+      - rag_network
+
   qdrant:
     image: qdrant/qdrant:latest
     ports:
@@ -30,11 +45,17 @@ services:
     depends_on:
       - qdrant
       - milvus
+      - postgres
     environment:
       - QDRANT_HOST=qdrant
       - QDRANT_PORT=6333
       - MILVUS_HOST=milvus
       - MILVUS_PORT=19530
+      - POSTGRES_HOST=postgres
+      - POSTGRES_PORT=5432
+      - POSTGRES_DB=bookstore
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=admin123
     networks:
       - rag_network
     command: "tail -f /dev/null"
@@ -45,4 +66,5 @@ networks:
 
 volumes:
   qdrant_storage:
-  milvus_data: 
+  milvus_data:
+  postgres_data: 
