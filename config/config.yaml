@@ -10,3 +10,13 @@ databases:
 
 embedding:
   model_name: "BAAI/bge-small-en-v1.5" 
+
+llm:
+  host: "ollama"
+  port: 11434
+  model: "llama3.2:1b"
+  parameters:
+    num_gpu: 1
+    num_thread: 4
+    temperature: 0.7
+    top_p: 0.9 

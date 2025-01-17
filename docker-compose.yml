@@ -37,6 +37,25 @@ services:
     networks:
       - rag_network
 
+  ollama:
+    image: ollama/ollama:latest
+    container_name: ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=all
+    networks:
+      - rag_network
+
   app:
     build: .
     container_name: rag-testing
@@ -46,6 +65,7 @@ services:
       - qdrant
       - milvus
       - postgres
+      - ollama
     environment:
       - QDRANT_HOST=qdrant
       - QDRANT_PORT=6333
@@ -56,6 +76,8 @@ services:
       - POSTGRES_DB=bookstore
       - POSTGRES_USER=admin
       - POSTGRES_PASSWORD=admin123
+      - OLLAMA_HOST=ollama
+      - OLLAMA_PORT=11434
     networks:
       - rag_network
     command: "tail -f /dev/null"
@@ -67,4 +89,5 @@ networks:
 volumes:
   qdrant_storage:
   milvus_data:
-  postgres_data: 
+  postgres_data:
+  ollama_data: 

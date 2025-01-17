@@ -7,6 +7,7 @@ from typing import List, Dict, Any
 import time
 from contextlib import contextmanager
 import json
+from llm.code_generator import CodeGenerator
 
 @contextmanager
 def timer(description: str):
@@ -48,8 +49,8 @@ def analyze_json_query(json_obj: Dict[str, Any], loader: SQLSchemaLoader) -> str
     with timer("Analyzing JSON structure"):
         fields = analyze_json_structure(json_obj)
     
-    query = "Find tables suitable for storing the following data structure:\n"
-    query += "\n".join(fields)
+    # query = "Find tables suitable for storing the following data structure:\n"
+    query = "\n".join(fields)
     return query
 
 def main():
@@ -109,10 +110,29 @@ def main():
         print(f"\nAnalyzing JSON structure:\n{json.dumps(sample_json, indent=2)}")
         print(f"\nGenerated Query:\n{query}")
         print("\nRecommended tables:")
+        
+        # Collect relevant table schemas
+        relevant_schemas = []
         for i, result in enumerate(results, 1):
-            print(f"\n{i}. Table: {result['metadata']['table_name']}")
-            # print(f"   Schema:\n{json.dumps(result['metadata']['schema'], indent=2)}")
-            # print(f"   Match Score: {1 - result['distance']:.2f}")
+            table_name = result['metadata']['table_name']
+            schema = result['metadata']['schema']
+            print(f"\n{i}. Table: {table_name}")
+            relevant_schemas.append({
+                "table_name": table_name,
+                "schema": schema
+            })
+
+        # Generate code using Ollama
+        with timer("Generating code"):
+            code_generator = CodeGenerator(
+                host=config['llm']['host'],
+                port=config['llm']['port'],
+                model=config['llm']['model'],
+                parameters=config['llm'].get('parameters', {})
+            )
+            generated_code = code_generator.generate_code(relevant_schemas, sample_json)
+            print("\nGenerated Code:")
+            print(generated_code)
 
 if __name__ == "__main__":
     with timer("Total execution"):

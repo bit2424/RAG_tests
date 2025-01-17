@@ -1,5 +1,6 @@
 chromadb
 sentence-transformers
+sqlalchemy
 # pinecone-client
 # pymilvus
 pyyaml
